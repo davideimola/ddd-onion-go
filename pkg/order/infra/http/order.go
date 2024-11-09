@@ -9,7 +9,13 @@ import (
 )
 
 type OrderHTTPService struct {
-	orderService orderService.OrderService
+	orderService *orderService.OrderService
+}
+
+func New(service *orderService.OrderService) *OrderHTTPService {
+	return &OrderHTTPService{
+		orderService: service,
+	}
 }
 
 type PostOrderRequest struct {

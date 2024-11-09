@@ -10,6 +10,12 @@ type OrderService struct {
 	orderRepository order.OrderRepository
 }
 
+func New(orderRepository order.OrderRepository) *OrderService {
+	return &OrderService{
+		orderRepository: orderRepository,
+	}
+}
+
 func (s *OrderService) Create(ctx context.Context, customerID uuid.UUID) (*order.Order, error) {
 	o := order.New(customerID)
 
