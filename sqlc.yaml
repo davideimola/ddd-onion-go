@@ -1,0 +1,29 @@
+version: '2'
+sql:
+  - engine: postgresql
+    queries: "./pkg/order/repos/pg/"
+    schema: "./db/schema.sql"
+    gen:
+      go:
+        package: pgOrderRepository
+        out: "./pkg/order/repos/pg/"
+        query_parameter_limit: 0
+        omit_unused_structs: true
+        sql_package: pgx/v5
+        emit_pointers_for_null_types: true
+        overrides:
+          - column: "*.id"
+            go_type:
+              type: "UUID"
+              import: "github.com/google/uuid"
+              package: uuid
+          - column: "*.*_id"
+            go_type:
+              type: "UUID"
+              import: "github.com/google/uuid"
+              package: uuid
+          - column: "orders.status"
+            go_type:
+              type: "Status"
+              import: "davideimola.dev/ddd-onion/pkg/order"
+              package: order

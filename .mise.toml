@@ -1,0 +1,4 @@
+[tools]
+go = "1.23.1"
+"go:github.com/sqlc-dev/sqlc/cmd/sqlc" = "1.27.0"
+"go:github.com/amacneil/dbmate" = "1.16.2"
