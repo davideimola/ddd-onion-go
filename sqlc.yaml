@@ -27,3 +27,25 @@ sql:
               type: "Status"
               import: "davideimola.dev/ddd-onion/pkg/order"
               package: order
+  - engine: postgresql
+    queries: "./pkg/inventory/repos/pg/"
+    schema: "./db/schema.sql"
+    gen:
+      go:
+        package: pgInventoryRepository
+        out: "./pkg/inventory/repos/pg/"
+        query_parameter_limit: 0
+        omit_unused_structs: true
+        sql_package: pgx/v5
+        emit_pointers_for_null_types: true
+        overrides:
+          - column: "*.id"
+            go_type:
+              type: "UUID"
+              import: "github.com/google/uuid"
+              package: uuid
+          - column: "*.*_id"
+            go_type:
+              type: "UUID"
+              import: "github.com/google/uuid"
+              package: uuid

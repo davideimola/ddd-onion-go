@@ -2,6 +2,8 @@ package server
 
 import (
 	"context"
+	pgInventoryRepository "davideimola.dev/ddd-onion/pkg/inventory/repos/pg"
+	inventoryService "davideimola.dev/ddd-onion/pkg/inventory/service"
 	orderHTTPService "davideimola.dev/ddd-onion/pkg/order/infra/http"
 	pgOrderRepository "davideimola.dev/ddd-onion/pkg/order/repos/pg"
 	orderService "davideimola.dev/ddd-onion/pkg/order/service"
@@ -30,7 +32,10 @@ func run(cmd *cobra.Command, args []string) {
 		panic(err)
 	}
 
-	orderHTTP := orderHTTPService.New(orderService.New(pgOrderRepository.NewOrderRepository(db)))
+	invSrv := inventoryService.New(pgInventoryRepository.NewProductRepository(db))
+	ordSrv := orderService.New(pgOrderRepository.NewOrderRepository(db), invSrv)
+
+	orderHTTP := orderHTTPService.New(ordSrv)
 
 	router := gin.Default()
 

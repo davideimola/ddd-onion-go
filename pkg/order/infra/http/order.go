@@ -19,7 +19,8 @@ func New(service *orderService.OrderService) *OrderHTTPService {
 }
 
 type PostOrderRequest struct {
-	CustomerID uuid.UUID `json:"customer_id"`
+	CustomerID uuid.UUID         `json:"customer_id"`
+	Items      map[uuid.UUID]int `json:"items"`
 }
 
 func (s *OrderHTTPService) PostOrder(c *gin.Context) {
@@ -30,7 +31,7 @@ func (s *OrderHTTPService) PostOrder(c *gin.Context) {
 		return
 	}
 
-	order, err := s.orderService.Create(c.Request.Context(), request.CustomerID)
+	order, err := s.orderService.Create(c.Request.Context(), request.CustomerID, request.Items)
 	if err != nil {
 		httpInfraErrors.HandleGinHTTPErrors(c, err)
 		return

@@ -20,15 +20,17 @@ type Order struct {
 	UpdatedAt  time.Time
 	CustomerID uuid.UUID
 	status     Status
+	items      map[uuid.UUID]int
 }
 
-func New(customerID uuid.UUID) *Order {
+func New(customerID uuid.UUID, items map[uuid.UUID]int) *Order {
 	return &Order{
 		ID:         uuid.New(),
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
 		CustomerID: customerID,
 		status:     StatusCreated,
+		items:      items,
 	}
 }
 
@@ -48,6 +50,10 @@ func Load(params LoadParams) *Order {
 		CustomerID: params.CustomerID,
 		status:     params.Status,
 	}
+}
+
+func (o *Order) Items() map[uuid.UUID]int {
+	return o.items
 }
 
 func (o *Order) Status() Status {

@@ -40,6 +40,8 @@ func (r *OrderRepository) UpdateOrder(ctx context.Context, orderID uuid.UUID, up
 		return nil, err
 	}
 
+	defer tx.Rollback(ctx)
+
 	q := New(tx)
 
 	o, err := r.getOrderForUpdate(ctx, q, orderID)
@@ -55,6 +57,10 @@ func (r *OrderRepository) UpdateOrder(ctx context.Context, orderID uuid.UUID, up
 		UpdatedAt: pgtype.Timestamp{Time: o.UpdatedAt, Valid: true},
 	})
 	if err != nil {
+		return nil, err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
 		return nil, err
 	}
 
